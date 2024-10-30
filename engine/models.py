@@ -11,3 +11,14 @@ class Subtitles(models.Model):
 
     def __str__(self):
         return f"{self.film_name} - {self.number}"
+
+
+class Films(models.Model):
+    film_name = models.CharField(max_length=255)
+    display_name = models.CharField(max_length=255)
+    year_levels = models.CharField(max_length=50)
+    author = models.CharField(max_length=255)
+    vimeo_id = models.CharField(max_length=30)
+
+    def __str__(self):
+        return f"{self.display_name}"

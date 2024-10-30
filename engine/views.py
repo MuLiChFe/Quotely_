@@ -1,7 +1,8 @@
 from django.shortcuts import render, HttpResponse
-from .models import Subtitles
+from .models import Subtitles, Films
 import time
 import requests
+import re
 
 
 def time_reversal(time):
@@ -18,15 +19,18 @@ def seconds_to_hms(seconds):
 
 
 def add_dialogs(start_number, result=[], max_sentences=7, distance=1, time_fan=[], gap_time=4,
-                file_name='sunset_boulevard'):
+                film_name='sunset_boulevard'):
     # 获取当前字幕
-    initial_time = time_reversal(Subtitles.objects.filter(film_name=file_name, number=start_number)[0].start_time)
+    lane = Subtitles.objects.filter(film_name=film_name, number=start_number)
+    if not lane:
+        return result
+    initial_time = time_reversal(lane[0].start_time)
     if not time_fan:
         time_fan = [initial_time, initial_time]
     if len(result) >= max_sentences:
         return result
-    pre_info = Subtitles.objects.filter(film_name=file_name, number=start_number + distance)
-    post_info = Subtitles.objects.filter(film_name=file_name, number=start_number - distance)
+    pre_info = Subtitles.objects.filter(film_name=film_name, number=start_number + distance)
+    post_info = Subtitles.objects.filter(film_name=film_name, number=start_number - distance)
     pre_lane = []
     post_lane = []
     if pre_info:
@@ -47,29 +51,65 @@ def add_dialogs(start_number, result=[], max_sentences=7, distance=1, time_fan=[
                        time_fan=time_fan)
 
 
-def search(request):
+def get_link(film_name):
+    film = Films.objects.filter(film_name=film_name)[0]
+    return film.vimeo_id if film else '0'
+
+
+def get_film_list(year_levels=None):
+    dict = {}
+    if year_levels is None:
+        year_levels = ['#12', '#11', '#10', '#9']
+    for year_level in year_levels:
+        films = Films.objects.filter(year_levels__icontains=year_level).order_by('film_name')
+        if not films:
+            continue
+        dict[year_level[1:]] = films
+    return dict
+
+def index(request):
+    film_dict = get_film_list()
+    context = {"film_dict": film_dict}
+    return render(request, 'engine/home.html',context)
+
+
+def search(request, film_name):
+    film_name = film_name
+    film_id = get_link(film_name)
+
+    display_name = ' '.join(film_name.split('_'))
+    display_name = display_name.title()
+
     t = time.time()
     query = request.GET.get('q', '')
-    results = Subtitles.objects.filter(film_name="sunset_boulevard", text__icontains=query)
+    results = Subtitles.objects.filter(film_name=film_name, text__icontains=query)
     if len(results) > 40:
         return render(request, 'engine/search.html', {'query': query, 'results': [], 'number_of_results': len(results),
                                                       'time_taken': f"{float(time.time() - t):.5f}",
+                                                      'film_name': film_name,
+                                                      'display_name': display_name,
                                                       'error_message': "Too many results, please exact keywords"})
     # 使用字典存储所有字幕以便快速查找
     for result in results:
         current_number = int(result.number)
+        result.text = re.sub(f'({re.escape(query)})', r'<span class="highlight">\1</span>', result.text,
+                             flags=re.IGNORECASE)
         result.dialogs = []
-
         # 使用递归添加对话
-        result.dialogs = add_dialogs(current_number, result=[result])
+        result.dialogs = add_dialogs(current_number, result=[result], film_name=film_name)
         result.dialogs.sort(key=lambda x: x.number)
         earliest_time = time_reversal(result.dialogs[0].start_time)
-        result.start_play_time = seconds_to_hms(earliest_time)
+        result.start_play_time = seconds_to_hms(earliest_time - 2)
 
     # 这里可以添加其他逻辑
     return render(request, 'engine/search.html', {'query': query, 'results': results,
                                                   'number_of_results': len(results),
-                                                  'time_taken': f"{float(time.time() - t):.5f}"}, )
+                                                  'time_taken': f"{float(time.time() - t):.5f}",
+                                                  'film_id': film_id,
+                                                  'film_name': film_name,
+                                                  'display_name': display_name
+                                                  },
+                  )
 
 
 def delete(request):

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quotely</title>
+    <!-- 引入 Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+<!-- 网页标题 -->
+<body class="bg-light">
+    <div class="container-fluid my-5">
+        <div class="row w-100">
+            <div class="col text-center px-5 justify-content-center">
+                <h1 class="display-4 mb-4">Quotely</h1>
+            </div>
+            <div class="container mt-5">
+                <!-- 分割线与Year 12标题 -->
+                {% for year,films in film_dict.items %}
+                    <h4>Year {{ year }}</h4>
+                    <hr class="my-2">
+                    <div>
+                        {% for film in films %}
+                            <a class="btn btn-link btn-lg" href="film/{{ film.film_name }}">◽ {{ film.display_name }} <small>- By {{ film.author }}</small></a><br>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+            </div>
+
+        </div>
+    </div>
+</body>
+
+
+<!-- 引入 Bootstrap JS 和依赖 -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
