@@ -1,5 +1,6 @@
 from django.shortcuts import render, HttpResponse
 from .models import Subtitles, Films
+from registration.models import User
 import time
 import requests
 import re
@@ -68,8 +69,10 @@ def get_film_list(year_levels=None):
     return dict
 
 def index(request):
+    user_id = request.session.get('user_id', None)
+    user = User.objects.filter(id=user_id).first()
     film_dict = get_film_list()
-    context = {"film_dict": film_dict}
+    context = {"film_dict": film_dict,'user': user}
     return render(request, 'engine/home.html',context)
 
 

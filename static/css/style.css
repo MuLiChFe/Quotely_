@@ -1,0 +1,42 @@
+:root {
+    --platform-green: #0da37f;
+    --platform-green-hover: #0b9272;
+    --platform-error: #d00e17;
+    --platform-error-hover: #b8210c;
+}
+
+.btn-primary {
+    --bs-btn-bg: var(--platform-green) !important;
+    --bs-btn-hover-bg: var(--platform-green-hover) !important;
+    --bs-btn-active-bg: var(--platform-green-hover) !important;
+    border: None !important;
+}
+.btn-primary:focus, textarea:focus, select:focus {
+    --border-color: var(--platform-green-hover) !important;
+    box-shadow: 0 0 0 0.25rem rgba(13, 163, 127, 0.25) !important; /* 设置绿色阴影 */
+}
+
+.btn-warning {
+    --bs-btn-bg: var(--platform-error) !important;
+    --bs-btn-hover-bg: var(--platform-error-hover) !important;
+    --bs-btn-active-bg: var(--platform-error-hover) !important;
+    border: None !important;
+}
+
+.input-primary:focus, textarea:focus, select:focus {
+    border-color: var(--platform-green) !important; /* 设置绿色边框 */
+    box-shadow: 0 0 0 0.25rem rgba(13, 163, 127, 0.25) !important; /* 设置绿色阴影 */
+}
+
+.input-warning:focus, textarea:focus, select:focus {
+    border-color: var(--platform-error) !important; /* 设置绿色边框 */
+    box-shadow: 0 0 0 0.25rem rgb(168, 57, 57, 0.25) !important; /* 设置绿色阴影 */
+}
+
+a.text-primary {
+    color: var(--platform-green) !important;
+}
+
+.text-warning {
+    color: var(--platform-error) !important;
+}
