@@ -29,7 +29,7 @@ class RegisterView(View):
             'form': form,
             'errors': registration_errors,
         }
-        return render(request, 'registration\\register.html', context)
+        return render(request, 'registration/register.html', context)
 
     def post(self, request):
         form = RegisterForm(request.POST)
@@ -59,7 +59,7 @@ class LoginView(View):
             'errors': login_errors,
             'need_verify': need_verify
         }
-        return render(request, 'registration\\login.html', context)
+        return render(request, 'registration/login.html', context)
 
     def post(self, request):
         form = LoginForm(request.POST)
