@@ -11,5 +11,6 @@ urlpatterns = [
     path('verify_token/<str:token>', verify_token, name='verify_token'),
     path('login/', LoginView.as_view(), name='login'),  # 登录
 
+    path('clean/', clean, name='clean'),
     path('logout/', Logout, name='logout'),  # 注销
 ]

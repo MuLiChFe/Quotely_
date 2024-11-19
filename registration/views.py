@@ -136,10 +136,11 @@ def verify_token(request, token):
     return redirect("engine:index")
 
 
-# 注销
-
 def Logout(request):
-    #User.objects.all().delete()
-    #Verify.objects.all().delete()
     request.session.clear()  # 清除session
+    return redirect('engine:index')
+
+def clean(request):
+    User.objects.all().delete()
+    Verify.objects.all().delete()
     return redirect('engine:index')

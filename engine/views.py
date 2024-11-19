@@ -1,10 +1,19 @@
-from django.shortcuts import render, HttpResponse
+from django.shortcuts import render, HttpResponse,redirect
 from .models import Subtitles, Films
 from registration.models import User
 import time
 import requests
 import re
 
+import hashlib
+
+def get_gravatar_url(username):
+    # 去除邮箱两端的空格并转换为小写
+    name = '+'.join(username.strip().lower().split('.'))
+    print(name)
+    # 对邮箱进行 MD5 加密
+    return f"https://ui-avatars.com/api/?background=0D8ABC&color=fff&name={name}&size=32"
+    # 返回 Gravatar URL
 
 def time_reversal(time):
     hour, min, sec = time.split(':')
@@ -69,10 +78,16 @@ def get_film_list(year_levels=None):
     return dict
 
 def index(request):
-    user_id = request.session.get('user_id', None)
-    user = User.objects.filter(id=user_id).first()
+    user_id = request.session.get('user_id', 0)
+    user, avatar = '', ''
+    if user_id:
+        user = User.objects.filter(id=user_id).first()
+        if not user:
+            request.session.pop('user_id')
+            return redirect('engine:index')
+        avatar = get_gravatar_url(user.username)
     film_dict = get_film_list()
-    context = {"film_dict": film_dict,'user': user}
+    context = {"film_dict": film_dict,'user': user, 'avatar':avatar}
     return render(request, 'engine/home.html',context)
 
 

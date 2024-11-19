@@ -28,6 +28,8 @@ class User(models.Model):
     is_verified = models.BooleanField(default=False)
     username = models.CharField(max_length=10, null=False)
     create_time = models.DateTimeField(auto_now_add=True)
+    account_type = models.CharField(max_length=255, default='Individual')
+    associated_school_id = models.CharField(max_length=255,default=None)
 
     def __str__(self):
         return f'{self.username}'

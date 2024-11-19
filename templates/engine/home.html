@@ -1,27 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quotely</title>
-    <!-- 引入 Bootstrap 5 CSS -->
-    {% load static %}
-    <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}"/>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="{% static 'css/fonts.css' %}">
-</head>
+{% extends 'template/user_base.html' %}
+{% load static %}
 
-<body>
-<div class="d-flex flex-column row g-0 w-100">
-    {% include 'public/header.html' %}
-{#    {% include "public/left_bar.html" %}#}
-    <div class="col px-0">
+{% block main-body %}
+    <!-- 主内容区 -->
+    <div id="main-content" class="col px-0">
         <div class="container-fluid my-5 px-0">
             <div class="row w-100">
-                123
-                {{ user.username }}
-                123
                 <div class="col text-center justify-content-center">
                     <h1 class="display-4 mb-4">Quotely</h1>
                 </div>
@@ -40,11 +24,7 @@
             </div>
         </div>
     </div>
-</div>
-
-<!-- 引入 Bootstrap 5 JS 和 Popper.js -->
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-</body>
-</html>
+    <script src="{% static 'js/public/left_bar.js' %}"></script>
+    <script src="{% static 'js/public/user_card.js' %}"></script>
+    <script src="{% static 'js/tooltip.js' %}"
+{% endblock main-body %}
