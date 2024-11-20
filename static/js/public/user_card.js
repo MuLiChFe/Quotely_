@@ -5,9 +5,7 @@ const component = document.getElementById("user-card");
 // 切换浮动组件的显示/隐藏
 function toggleFloatingComponent() {
     const isShowing = component.classList.contains('show');
-    const topElement = document.getElementById("user-card");
-    // 在新内容生成后，动态将组件重新插入到 DOM 的最后
-    component.body.appendChild(topElement);
+    document.body.appendChild(component);
     if (isShowing) {
         closeFloatingComponent();
     } else {
