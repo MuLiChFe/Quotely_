@@ -68,6 +68,3 @@ def check_marker(request):
                 return JsonResponse({'exist': True})
             return JsonResponse({'exist': False})
     return JsonResponse({'message': 'Invalid method'}, status=405)
-
-def api_test(request):
-    return render(request,'api_test.html')
