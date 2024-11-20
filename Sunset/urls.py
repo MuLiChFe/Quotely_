@@ -25,5 +25,8 @@ urlpatterns = [
 
     path('',include('engine.urls')),
 
-    path('',include('registration.urls'))
+    path('',include('registration.urls')),
+
+    path('api/', include('api.urls')),
+
 ]

@@ -1,16 +1,19 @@
-from django.shortcuts import render, HttpResponse,redirect
-from .models import Subtitles, Films
+from django.shortcuts import render,redirect
+from .models import Subtitles, Film
 from registration.models import User
-import time
-import requests
-import re
+from rest_framework import viewsets
+from rest_framework.permissions import IsAuthenticated
 
-import hashlib
+from rest_framework import serializers
+from .models import Film
+import time
+import re
+import json
+
 
 def get_gravatar_url(username):
     # 去除邮箱两端的空格并转换为小写
     name = '+'.join(username.strip().lower().split('.'))
-    print(name)
     # 对邮箱进行 MD5 加密
     return f"https://ui-avatars.com/api/?background=0D8ABC&color=fff&name={name}&size=32"
     # 返回 Gravatar URL
@@ -62,32 +65,41 @@ def add_dialogs(start_number, result=[], max_sentences=7, distance=1, time_fan=[
 
 
 def get_link(film_name):
-    film = Films.objects.filter(film_name=film_name)[0]
+    film = Film.objects.filter(film_name=film_name)[0]
     return film.vimeo_id if film else '0'
 
 
 def get_film_list(year_levels=None):
     dict = {}
     if year_levels is None:
-        year_levels = ['#12', '#11', '#10', '#9']
+        year_levels = ['12', '11', '10', '9']
     for year_level in year_levels:
-        films = Films.objects.filter(year_levels__icontains=year_level).order_by('film_name')
+        films = Film.objects.filter(year_levels__icontains=year_level).order_by('film_name')
         if not films:
             continue
         dict[year_level[1:]] = films
     return dict
 
-def index(request):
+def user_info(request):
     user_id = request.session.get('user_id', 0)
+    if not user_id:
+        return 'no user_id',''
     user, avatar = '', ''
     if user_id:
         user = User.objects.filter(id=user_id).first()
         if not user:
             request.session.pop('user_id')
-            return redirect('engine:index')
+            return False, ''
         avatar = get_gravatar_url(user.username)
+        user.avatar = avatar
+    return True, user
+
+def index(request):
+    flag, user = user_info(request)
+    if not flag:
+        return redirect('engine:index')
     film_dict = get_film_list()
-    context = {"film_dict": film_dict,'user': user, 'avatar':avatar}
+    context = {"film_dict": film_dict,'user': user}
     return render(request, 'engine/home.html',context)
 
 
@@ -129,13 +141,11 @@ def search(request, film_name):
                                                   },
                   )
 
-
-def delete(request):
-    Subtitles.objects.all().delete()
-    import time
-    return HttpResponse(f'success,{time.time()}')
-
-
-def video(request):
-    video_ = requests.get("https://vimeo.com/api/oembed.json?url=https%3A//vimeo.com/1020879319&width=480&height=360")
-    return render(request, 'engine/video.html', {'video_': video_})
+def library(request,):
+    flag, user = user_info(request)
+    if not flag or flag == 'no user_id':
+        return redirect('engine:index')
+    films = Film.objects.all().values("id", 'film_name', 'display_name', 'year_levels', 'author', 'vimeo_id', 'image_link', 'type')
+    context = {'user': user, 'films': json.dumps(list(films))}
+    print(user.id)
+    return render(request, 'engine/library/library.html',context)

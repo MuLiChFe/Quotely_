@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FilmMarker API Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        #output {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            background-color: #f9f9f9;
+        }
+        .film-item {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+<form>
+    {% csrf_token %}
+</form>
+
+    <h1>FilmMarker API Test</h1>
+    <button id="getFilms">Get My Favorite Films</button>
+    <button id="addFilm">Add Film to Favorites</button>
+    <div id="output">Results will appear here...</div>
+
+    <script>
+        function getCSRFToken() {
+    let cookies = document.cookie.split(';');
+    for (let cookie of cookies) {
+        let [key, value] = cookie.trim().split('=');
+        if (key === 'csrftoken') return value;
+    }
+    return null;
+}
+
+        const API_BASE_URL = "http://192.168.2.180:8000//api/film-markers/";
+
+        // Output element
+        const output = document.getElementById('output');
+
+        // Helper function to display results
+        function displayResult(result) {
+            output.innerHTML = JSON.stringify(result, null, 2);
+        }
+
+        // Fetch the list of favorite films
+        document.getElementById('getFilms').addEventListener('click', () => {
+            fetch(API_BASE_URL)
+                .then(response => response.json())
+                .then(data => displayResult(data))
+                .catch(err => {
+                    output.innerHTML = `<p style="color: red;">Error: ${err.message}</p>`;
+                });
+        });
+
+        // Add a new film to the favorites
+        document.getElementById('addFilm').addEventListener('click', () => {
+            const newFilm = {
+                film_id: "1",  // Replace with a real film ID
+                user_id: "1"
+            };
+
+            fetch(API_BASE_URL, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": getCSRFToken(),
+                },
+                body: JSON.stringify(newFilm),
+            })
+                .then(response => response.json())
+                .then(data => displayResult(data))
+                .catch(err => {
+                    output.innerHTML = `<p style="color: red;">Error: ${err.message}</p>`;
+                });
+        });
+    </script>
+</body>
+</html>

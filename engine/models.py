@@ -1,5 +1,5 @@
 from django.db import models
-
+from registration.models import User
 
 # Create your models here.
 class Subtitles(models.Model):
@@ -13,12 +13,14 @@ class Subtitles(models.Model):
         return f"{self.film_name} - {self.number}"
 
 
-class Films(models.Model):
+class Film(models.Model):
     film_name = models.CharField(max_length=255)
     display_name = models.CharField(max_length=255)
     year_levels = models.CharField(max_length=50)
     author = models.CharField(max_length=255)
     vimeo_id = models.CharField(max_length=30)
+    image_link = models.URLField(default='')
+    type = models.CharField(max_length=255, default='Noval')
 
     def __str__(self):
         return f"{self.display_name}"
