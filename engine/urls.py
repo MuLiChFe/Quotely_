@@ -4,8 +4,6 @@ from . import views
 app_name = "engine"
 
 from django.urls import path, include
-from rest_framework.routers import DefaultRouter
-
 urlpatterns = [
     path('film/<str:film_name>', views.search, name='search'),
     path('', views.index, name='index'),
