@@ -35,7 +35,7 @@ function passwordCheck(element) {
     const check_flag = document.getElementsByClassName('password_check');
     const guide = document.getElementById('password_guide');
 
-    console.log(guide)
+    // console.log(guide)
 
     if (!check_flag) { return; }  // 如果没有 check_flag 元素，直接返回
     else { guide.style.display = 'block'; }  // 显示指南

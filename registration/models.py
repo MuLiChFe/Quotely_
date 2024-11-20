@@ -32,4 +32,4 @@ class User(models.Model):
     associated_school_id = models.CharField(max_length=255,default=None)
 
     def __str__(self):
-        return f'{self.username}'
+        return f'{self.id} - {self.username}'

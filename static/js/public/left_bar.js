@@ -3,7 +3,7 @@ function toggleSidebar() {
 
     // 切换 expanded 类名
     const isExpanded = sidebar.classList.toggle('expanded');
-    console.log(document.querySelectorAll(".explanations"));
+    // console.log(document.querySelectorAll(".explanations"));
 
 
     // 平滑修改所有 explanations 的显隐状态

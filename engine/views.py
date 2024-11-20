@@ -1,15 +1,12 @@
 from django.shortcuts import render,redirect
-from .models import Subtitles, Film
+from .models import Subtitles
 from registration.models import User
-from rest_framework import viewsets
-from rest_framework.permissions import IsAuthenticated
-
-from rest_framework import serializers
-from .models import Film
 import time
 import re
 import json
 
+from .models import Film
+# 获取用户关注的所有电
 
 def get_gravatar_url(username):
     # 去除邮箱两端的空格并转换为小写

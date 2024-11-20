@@ -8,12 +8,14 @@ const elementsWithTooltip = document.querySelectorAll("[data-tooltip]");
 // 为每个元素添加鼠标事件
 elementsWithTooltip.forEach(element => {
     element.addEventListener("mouseenter", function() {
+        if (document.getElementById('left-bar').classList.contains('expanded')) {
+            return
+        }
         // 设置tooltip的文本内容为 data-tooltip 属性的值
         tooltip.textContent = element.getAttribute("data-tooltip");
 
         // 计算tooltip的位置并显示
         const rect = element.getBoundingClientRect();
-        const tooltipWidth = tooltip.offsetWidth;
         const tooltipHeight = tooltip.offsetHeight;
 
         // 将tooltip放置到目标元素的右侧

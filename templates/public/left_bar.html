@@ -36,7 +36,7 @@
                         </g>
                     </svg>
                 </a>
-                <div class="explanations">
+                <div class="explanations" style="display: block!important;">
                     <a id="toggle-btn" class="d-flex align-items-center pt-2 side-button justify-content-center" onclick="PageNavigator('/')" style="padding-left:2px">
                         <?xml version="1.0" encoding="UTF-8"?>
                         <svg id="Layer_2" height="20" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600.65 192.21">
@@ -63,8 +63,9 @@
             </div>
             <div class="position-relative w-100 explanations">
                 <div class="position-absolute top-0 end-0">
-                    <button id="toggle-btn" class="btn btn-light d-flex align-items-center p-2 side-button " data-tooltip="Close" onclick="toggleSidebar()">
-                        <svg class="size-4" data-testid="geist-icon" height="16" stroke-linejoin="round" viewBox="0 0 16 16" width="16" style="color: currentcolor;"><path fill-rule="evenodd" clip-rule="evenodd" d="M6.245 2.5H14.5V12.5C14.5 13.0523 14.0523 13.5 13.5 13.5H6.245V2.5ZM4.995 2.5H1.5V12.5C1.5 13.0523 1.94772 13.5 2.5 13.5H4.995V2.5ZM0 1H1.5H14.5H16V2.5V12.5C16 13.8807 14.8807 15 13.5 15H2.5C1.11929 15 0 13.8807 0 12.5V2.5V1Z" fill="currentColor"></path></svg>
+                    <button id="toggle-btn" class="btn btn-light d-flex align-items-center p-2 side-button" data-tooltip="Close" onclick="toggleSidebar()">
+                        <svg class="size-4" data-testid="geist-icon" height="16" stroke-linejoin="round" viewBox="0 0 16 16" width="16" style="color: currentcolor;">
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M6.245 2.5H14.5V12.5C14.5 13.0523 14.0523 13.5 13.5 13.5H6.245V2.5ZM4.995 2.5H1.5V12.5C1.5 13.0523 1.94772 13.5 2.5 13.5H4.995V2.5ZM0 1H1.5H14.5H16V2.5V12.5C16 13.8807 14.8807 15 13.5 15H2.5C1.11929 15 0 13.8807 0 12.5V2.5V1Z" fill="currentColor"></path></svg>
                     </button>
                 </div>
             </div>
@@ -72,20 +73,15 @@
 
 
         <!-- 其他内容部分 -->
-        <div class="content flex-grow-1">
-            <!-- 放置你左侧栏的其他内容，如导航、菜单等 -->
-            <div class="menu-item d-flex align-items-center">
-                <a href="#">1</a>
-                <div class="explanation ms-2"><p>explanation of 1</p></div>
-            </div>
-            <div class="menu-item d-flex align-items-center">
-                <a href="#">2</a>
-                <div class="explanation ms-2">explanation of 2</div>
-            </div>
-            <div class="menu-item d-flex align-items-center">
-                <a href="#">3</a>
-                <div class="explanation ms-2">explanation of 3</div>
-            </div>
+        <div class="content flex-grow-1 px-2">
+            <button type='button' id="toggle-btn" class="w-100 btn btn-light d-flex p-2 side-button justify-content-start" onclick="PageNavigator('/library')"  data-tooltip="Library">
+                <span class="d-flex align-items-center" style="position: relative; left: 0px; top: 0px;">
+                    <svg data-testid="geist-icon" height="16" stroke-linejoin="round" viewBox="0 0 16 16" width="16" style="color: currentcolor;">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M0 1H0.75H5C6.2267 1 7.31583 1.58901 8 2.49963C8.68417 1.58901 9.7733 1 11 1H15.25H16V1.75V13V13.75H15.25H10.7426C10.1459 13.75 9.57361 13.9871 9.15165 14.409L8.53033 15.0303H7.46967L6.84835 14.409C6.42639 13.9871 5.8541 13.75 5.25736 13.75H0.75H0V13V1.75V1ZM7.25 4.75C7.25 3.50736 6.24264 2.5 5 2.5H1.5V12.25H5.25736C5.96786 12.25 6.65758 12.4516 7.25 12.8232V4.75ZM8.75 12.8232V4.75C8.75 3.50736 9.75736 2.5 11 2.5H14.5V12.25H10.7426C10.0321 12.25 9.34242 12.4516 8.75 12.8232Z" fill="currentColor"></path></svg>                        <span class="explanations align-left ps-3">
+                        My Library
+                    </span>
+                </span>
+            </button>
         </div>
 
 

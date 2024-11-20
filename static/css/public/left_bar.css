@@ -83,14 +83,21 @@
 }
 
 .explanations{
-    white-space: none;
+    white-space: nowrap;
     opacity: 0; /* 初始隐藏 */
     visibility: hidden; /* 确保不可见时不占空间 */
     transition: opacity 0.5s ease;
+    text-align: left;
+    line-height: 1.1;
+    top:-1px;
+    display: none;
+    overflow: hidden;
+
 }
 .explanations.show {
     opacity: 1; /* 显示时完全不透明 */
     visibility: visible; /* 显示时可见 */
+    display: block;
 }
 
 

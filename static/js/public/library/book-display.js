@@ -1,17 +1,19 @@
-document.addEventListener('DOMContentLoaded', function () {
-    filmsData = JSON.parse(films);
-    // 输出数据到控制台验证
+import { getUserMarkers, addMarker, removeMarker, checkMarker } from "/static/js/api/film_api.js";
 
-    const filmsRow = document.getElementById('films-row');
-    const modal = document.getElementById('bookModal');
-    const addToLibraryBtn = document.getElementById('addToLibraryBtn');
-    let currentFilmId = null;
+const userId = 1; // 示例用户 ID
+let currentFilmId = null;
+
+document.addEventListener('DOMContentLoaded', function () {
+    const filmsData = JSON.parse(films); // 电影数据
+    const filmsRow = document.getElementById('films-row'); // 卡片容器
+    const modal = document.getElementById('bookModal'); // 模态框
+    const addToLibraryBtn = document.getElementById('addToLibraryBtn'); // "添加到库" 按钮
+    const removeFromLibraryBtn = document.getElementById('removeFromLibraryBtn'); // "取消添加" 按钮
 
     // 动态生成电影卡片
     filmsData.forEach(film => {
         const filmCard = document.createElement('div');
-        filmCard.classList.add('card','w-full','p-0');
-
+        filmCard.classList.add('card', 'w-full', 'p-0');
         filmCard.innerHTML = `
             <div class="" data-bs-toggle="modal" data-bs-target="#bookModal" data-film-id="${film.id}">
                 <img src="${film.image_link}" class="card-img-top book-image" alt="${film.display_name}">
@@ -25,16 +27,16 @@ document.addEventListener('DOMContentLoaded', function () {
                 </div>
             </div>
         `;
-
         filmsRow.appendChild(filmCard);
     });
 
-    // Modal 内容更新
-    modal.addEventListener('show.bs.modal', function(event) {
-        const button = event.relatedTarget;
-        currentFilmId = button.getAttribute('data-film-id');
-        const film = filmsData.find(f => f.id == currentFilmId);
+    // 模态框显示时动态加载内容
+    modal.addEventListener('show.bs.modal', async function (event) {
+        const button = event.relatedTarget; // 触发模态框的按钮
+        currentFilmId = button.getAttribute('data-film-id'); // 当前电影 ID
+        const film = filmsData.find(f => f.id == currentFilmId); // 查找电影数据
 
+        // 更新模态框内容
         document.getElementById('bookModalLabel').textContent = film.display_name;
         document.getElementById('modalBookImage').src = film.image_link;
         document.getElementById('modalBookImage').alt = film.display_name;
@@ -42,25 +44,48 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('modalBookType').textContent = film.type;
         document.getElementById('modalBookYear').textContent = film.year_levels;
 
-        // Reset the Add to Library button
-        addToLibraryBtn.innerHTML = `
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle me-2" viewBox="0 0 16 16">
-                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-                <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
-            </svg>
-            Add to Library
-        `;
-        addToLibraryBtn.classList.remove('btn-success');
-        addToLibraryBtn.classList.add('btn-primary');
-        addToLibraryBtn.disabled = false;
+        // 检查当前电影是否已添加
+        try {
+            const isMarked = await checkMarker("film",String(userId), currentFilmId);
+            if (isMarked.exist) {
+                // 已添加到库，隐藏 "添加到库" 按钮，显示 "取消添加" 按钮
+                addToLibraryBtn.style.display = 'none';
+                removeFromLibraryBtn.style.display = 'inline-block';
+            } else {
+                // 未添加到库，显示 "添加到库" 按钮，隐藏 "取消添加" 按钮
+                addToLibraryBtn.style.display = 'inline-block';
+                removeFromLibraryBtn.style.display = 'none';
+            }
+        } catch (error) {
+            console.error('Error checking marker status:', error);
+        }
     });
 
-    // 添加到库的按钮事件
-    addToLibraryBtn.addEventListener('click', function() {
-        this.innerHTML = 'Added to Library';
-        this.classList.remove('btn-primary');
-        this.classList.add('btn-success');
-        this.disabled = true;
-        console.log(`Added ${filmsData.find(f => f.id == currentFilmId).display_name} to library`);
+    // "添加到库" 按钮点击事件
+    addToLibraryBtn.addEventListener('click', async function () {
+        try {
+            await addMarker("film",userId, currentFilmId); // 添加到库的 API 调用
+            // console.log(`Added film ${currentFilmId} to library.`);
+
+            // 更新按钮显示状态
+            this.style.display = 'none';
+            removeFromLibraryBtn.style.display = 'inline-block';
+        } catch (error) {
+            // console.error('Error adding film to library:', error);
+        }
+    });
+
+    // "取消添加" 按钮点击事件
+    removeFromLibraryBtn.addEventListener('click', async function () {
+        try {
+            await removeMarker("film",userId, currentFilmId); // 从库中移除的 API 调用
+            // console.log(`Removed film ${currentFilmId} from library.`);
+
+            // 更新按钮显示状态
+            this.style.display = 'none';
+            addToLibraryBtn.style.display = 'inline-block';
+        } catch (error) {
+            console.error('Error removing film from library:', error);
+        }
     });
 });
